@@ -3,9 +3,7 @@ require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
-const shortid = require('shortid');
 
-const Url = require('./models/Url');
 const indexRouter = require('./routes/');
 
 const app = express();
@@ -15,6 +13,7 @@ const app = express();
 
 app.use(express.static(path.resolve('public')));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use('/', indexRouter);
 
 mongoose

@@ -5,8 +5,68 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
         <title>Document</title>
+        <style>
+            .url-form-control .error-msg {
+                display: none;
+                color: #ef2525;
+                margin: 0;
+            }
+
+            .url-form-control input {
+                display: block;
+            }
+        </style>
     </head>
     <body>
-        <div>Hello world</div>
+        <form class="url-form-control" onsubmit="handleFormSubmit(event)">
+            <label>Enter url here</label>
+            <input type="text" name="url" />
+            <p class="error-msg"></p>
+            <button>Shorten Url</button>
+        </form>
+
+        <div>
+            <p>The Shortened Url is</p>
+            <input class="shortened-url" type="text" />
+        </div>
+
+        <script
+            src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"
+        ></script>
+        <script>
+            function handleFormSubmit(event) {
+                const errorMsgEl = $('.url-form-control .error-msg');
+                const url = $('input[name="url"]').val();
+
+                event.preventDefault();
+                clearErrorMsg(errorMsgEl);
+
+                if (!url) {
+                    const errorMsg = 'Url cannot be empty';
+
+                    setErrorMsg(errorMsgEl, errorMsg);
+
+                    return;
+                }
+
+                $.post('/', { url }).then(response => {
+                    $('.shortened-url').val(
+                        `${window.origin}/${response.shortenedUrl}`
+                    );
+                });
+            }
+
+            function setErrorMsg(el, msg) {
+                el.text(msg);
+                el.show();
+            }
+
+            function clearErrorMsg(el) {
+                el.text('');
+                el.hide();
+            }
+        </script>
     </body>
 </html>
